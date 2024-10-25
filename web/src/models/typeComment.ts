@@ -4,9 +4,9 @@
 // 3. 创建时间=> created_id, 评论的时间
 // 4. 评论内容=> content
 
-export interface Comment{
-    author_id: number;
-    article_id: number;
-    created_id: number;
-    content: string
+export interface TypeComment {
+    author_id?: number;
+    article_id?: number;
+    created_id?: number;
+    content?: string
 }

@@ -2,11 +2,14 @@
 
 import { RouterProvider } from "react-router-dom";
 import router from "@/router";
+import { Suspense } from "react";
 
 function App() {
     return (
         <>
-            <RouterProvider router={router} />
+            <Suspense fallback={(<div>加载中. . . .</div>)}>
+                <RouterProvider router={router} />
+            </Suspense>
         </>
     );
 }

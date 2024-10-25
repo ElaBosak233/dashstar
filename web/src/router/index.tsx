@@ -32,7 +32,7 @@ const routes: RouteObject[] = [
                         path: "/home",
                         element: <HomePage />,
                     }, {
-                        path: "/showArticle",
+                        path: "/showArticle/:id",
                         element: <ShowArticlePage />,
                     }, {
                         path: "/writeArticle",

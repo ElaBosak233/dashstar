@@ -5,8 +5,9 @@
 // title => 文章标题
 
 export interface Article {
-    author_id: number;
-    content: string;
-    created_at: number;
-    title: string;
+    id?: number
+    author_id?: number;
+    content?: string;
+    created_at?: number;
+    title?: string;
 }
