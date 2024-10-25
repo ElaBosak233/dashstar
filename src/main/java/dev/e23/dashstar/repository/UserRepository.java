@@ -5,6 +5,8 @@ import dev.e23.dashstar.util.HibernateUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceException;
+import org.testng.annotations.Test;
+
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class UserRepository {
         }
         return users;
     }
+
 
     public User findByID(Integer id) throws PersistenceException {
         EntityManager em = HibernateUtil.getEntityManager();

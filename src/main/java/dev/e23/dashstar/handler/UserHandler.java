@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ public class UserHandler {
 
     @Inject  // 要求注入一个 UserRepository 实例（依赖于 UserRepository 中的 @ApplicationScoped 注解）
     private UserRepository userRepository;
+
 
     @GET  // 需要使用 HTTP GET 方法访问
     @Path("/")  // /api/users
