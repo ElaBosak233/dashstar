@@ -26,7 +26,6 @@ const useAuthStore = create<AuthState>()(
                     user: undefined,
                     token: undefined,
                 });
-                // localStorage.removeItem("auth_state")
             },
         }),
         {

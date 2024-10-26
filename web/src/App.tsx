@@ -2,11 +2,16 @@
 
 import { RouterProvider } from "react-router-dom";
 import router from "@/router";
+import { ThemeContextProvider } from "@/components/NavigationBar.tsx";
+
 
 function App() {
     return (
         <>
-            <RouterProvider router={router} fallbackElement={<div>加载中. . . .</div>} />
+            <ThemeContextProvider>
+
+                <RouterProvider router={router} fallbackElement={<div>加载中. . . .</div>} />
+            </ThemeContextProvider>
         </>
     );
 }

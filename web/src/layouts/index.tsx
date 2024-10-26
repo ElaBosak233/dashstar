@@ -8,7 +8,8 @@ export default function Layout(){
     return (
         <>
             <NavigationBar />
-            <Container sx={{display:"flex", justifyContent:"center"}}>
+            <Container>
+
             <Outlet />
             </Container>
         </>

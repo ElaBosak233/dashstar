@@ -13,7 +13,6 @@ const RouteGuard: React.FC = () => {
             navigator("/login", { replace: true, state: location.pathname });
             return;
         }else{
-            console.log("token是:");
             console.log(token)
         }
     }, [token, navigator, location]);

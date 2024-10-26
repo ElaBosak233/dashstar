@@ -2,6 +2,7 @@ package dev.e23.dashstar.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -30,7 +31,7 @@ public class JwtUtil {
      * @param token 要验证的 token
      * @return token 的 subject，即用户 id
      */
-    public static String validateToken(String token) {
+    public static String validateToken(String token) throws MalformedJwtException {
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
     }

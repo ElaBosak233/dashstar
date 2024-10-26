@@ -66,7 +66,13 @@ public class ArticleRepository {
         EntityManager em = HibernateUtil.getEntityManager();
         try {
             em.getTransaction().begin();  // 开始事务
-            em.merge(article);  // 更新文章
+            Article existingArticle = em.find(Article.class, article.getId());  // 查找已经存在的 article
+            try {
+                HibernateUtil.copyNonNullProperties(article, existingArticle);  // 手动合并需要更改的字段
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            em.merge(existingArticle);  // 更新文章
             em.getTransaction().commit();  // 提交事务
         } catch (PersistenceException e) {
             em.getTransaction().rollback();  // 当出了异常时回滚事务

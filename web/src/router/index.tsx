@@ -1,6 +1,7 @@
 // 路由的配置文件.
 // writeArticlePage , homePage,  showArticlePage 组件都添加了路由守卫, 防止退出登录后撤回到之前账号的显示和写的界面.
 import { createBrowserRouter, RouteObject } from "react-router-dom";
+import ShowArticlePage from "@/pages/ShowArticlePage.tsx";
 
 const routes: RouteObject[] = [
     {
@@ -19,31 +20,20 @@ const routes: RouteObject[] = [
                 },
             },
             {
+                path: "/articles/:id",
+                element: <ShowArticlePage />,
+            }, {
+                path: "/articles/:id/edit",
                 lazy: async () => {
-                    const RouteGuard = await import("./routeGuard");
-                    return { Component: RouteGuard.default };
+                    const EditArticle = await import("@/pages/EditArticlePage.tsx");
+                    return { Component: EditArticle.default };
                 },
-                children: [
-                    {
-                        path: "/articles/:id",
-                        lazy: async () => {
-                            const ShowArticle = await import("@/pages/ShowArticlePage");
-                            return { Component: ShowArticle.default };
-                        },
-                    }, {
-                        path: "/articles/:id/edit",
-                        lazy: async () => {
-                            const EditArticle = await import("@/pages/EditArticle.tsx");
-                            return { Component: EditArticle.default };
-                        },
-                    }, {
-                        path: "/articles/new",
-                        lazy: async () => {
-                            const CreateArticle = await import("@/pages/CreateArticle.tsx");
-                            return { Component: CreateArticle.default };
-                        },
-                    },
-                ],
+            }, {
+                path: "/articles/new",
+                lazy: async () => {
+                    const CreateArticle = await import("@/pages/CreateArticlePage");
+                    return { Component: CreateArticle.default };
+                },
             },
             {
                 path: "/login",
@@ -53,10 +43,10 @@ const routes: RouteObject[] = [
                 },
             },
             {
-                path: "/logon",
+                path: "/register",
                 lazy: async () => {
-                    const LogonPage = await import("@/pages/LogOnPage");
-                    return { Component: LogonPage.default };
+                    const RegisterPage = await import("@/pages/RegisterPage.tsx");
+                    return { Component: RegisterPage.default };
                 },
             },
             {

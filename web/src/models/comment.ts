@@ -4,9 +4,12 @@
 // 3. 创建时间=> created_id, 评论的时间
 // 4. 评论内容=> content
 
+import { User } from "@/models/user.ts";
+
 export interface Comment {
-    author_id?: number;
+    user_id?: number;
     article_id?: number;
     created_at?: number;
     content?: string
+    user?:User
 }

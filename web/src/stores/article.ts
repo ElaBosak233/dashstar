@@ -7,7 +7,9 @@ import { api } from "@/utils/axios.ts";
 
 interface ArticleState {
     articles?: Array<Article>;
+    currentTitle?: string;
     fetchArticles: () => void;
+    setCurrentTitle: (title: string) => void;
 }
 
 
@@ -20,8 +22,10 @@ const useArticleStore = create<ArticleState>()(
                 },
             );
         },
-
-    })
+        setCurrentTitle: (title: string) => {
+            set({ currentTitle: title });
+        },
+    }),
 );
 
 export default useArticleStore;

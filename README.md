@@ -457,7 +457,7 @@ Hibernate 的自动迁移功能。这样一来，你就不需要使用 `xxx.sql`
 
 - 获取所有文章（GetAllArticles）
 - 获取指定 ID 的文章（GetArticleById）
-- 创建文章（CreateArticle）
+- 创建文章（CreateArticlePage）
 - *获取指定 ID 的文章的附属评论（GetComments）*
 
 #### 评论

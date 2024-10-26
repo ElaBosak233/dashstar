@@ -3,6 +3,7 @@ package dev.e23.dashstar.security;
 import dev.e23.dashstar.model.User;
 import dev.e23.dashstar.repository.UserRepository;
 import dev.e23.dashstar.util.JwtUtil;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.annotation.Priority;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotAuthorizedException;
@@ -23,11 +24,15 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
+
+    private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
 
     @Context
     private ResourceInfo resourceInfo;
@@ -48,15 +53,16 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 
         String token = authorizationHeader.substring("Bearer ".length()).trim();
-        String id = "";
+        Integer id = null;
 
         try {
-            id = JwtUtil.validateToken(token);  // 验证 JWT，如果验证成功，会返回用户 ID
+            id = Integer.valueOf(JwtUtil.validateToken(token));
         } catch (Exception e) {
             containerRequestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            return;
         }
 
-        final String finalID = id;
+        final String finalID = id.toString();
         containerRequestContext.setSecurityContext(new SecurityContext() {
             @Override
             public Principal getUserPrincipal() {
@@ -79,7 +85,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             }
         });
 
-        User user = userRepository.findByID(Integer.valueOf(id));
+        User user = userRepository.findByID(id);
         for (String role : methodRoles) {  // 检查用户角色是否满足要求
             if (user.getRole().equals(role)) {
                 return;

@@ -8,17 +8,16 @@ import {
     Typography,
     Box,
 } from "@mui/material";
-import { AccountCircle, Key } from "@mui/icons-material";
+import { AccountCircle, BadgeRounded, Key } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "@/stores/auth.ts";
 
-export default function LogInPage() {
+export default function RegisterPage() {
     const [formData, setFormData] = useState({
         userName: "",
         passWord: "",
+        nickName: "",
     });
     const navigator = useNavigate();
-    const authStore = useAuthStore();
 
     const handleInputChange =
         (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,34 +29,36 @@ export default function LogInPage() {
 
     function handleSubmit() {
         api()
-            .post("/users/login", {
+            .post("users/register", {
                 username: formData.userName,
                 password: formData.passWord,
+                nickname: formData.nickName || formData.userName,
             })
             .then((res) => {
                 const r = res.data;
-                authStore.setToken(r.token);
-                authStore.setUser(r.data);
-                navigator("/");
+                if (r.code === "CREATED") {
+                    alert("注册成功");
+                    navigator("/");
+                }
             });
     }
 
     return (
         <Box
             sx={{
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#f5f5f5'
+                minHeight: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#f5f5f5",
             }}
         >
             <Card
                 sx={{
                     maxWidth: 450,
-                    width: '100%',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-                    borderRadius: '16px'
+                    width: "100%",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                    borderRadius: "16px",
                 }}
             >
                 <Box sx={{ p: 4 }}>
@@ -68,13 +69,13 @@ export default function LogInPage() {
                         sx={{
                             fontWeight: 600,
                             mb: 4,
-                            color: 'primary.main'
+                            color: "primary.main",
                         }}
                     >
-                        欢迎登录
+                        注册账号
                     </Typography>
 
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                         <TextField
                             fullWidth
                             variant="outlined"
@@ -88,6 +89,23 @@ export default function LogInPage() {
                                     </InputAdornment>
                                 ),
                             }}
+                        />
+
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            label="昵称"
+                            value={formData.nickName}
+                            onChange={handleInputChange("nickName")}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <BadgeRounded color="primary" />
+                                    </InputAdornment>
+                                ),
+                            }}
+                            placeholder="可以为空"
+                            helperText="选填项，默认与用户名相同"
                         />
 
                         <TextField
@@ -110,53 +128,16 @@ export default function LogInPage() {
                             onClick={handleSubmit}
                             variant="contained"
                             size="large"
-                            fullWidth
                             sx={{
                                 mt: 2,
-                                height: '48px',
-                                borderRadius: '8px',
-                                textTransform: 'none',
-                                fontSize: '1rem'
+                                height: "48px",
+                                borderRadius: "8px",
+                                textTransform: "none",
+                                fontSize: "1rem",
                             }}
                         >
-                            立即登录
+                            立即注册
                         </Button>
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                mt: 1,
-                                px: 1
-                            }}
-                        >
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    color: 'primary.main',
-                                    cursor: 'pointer',
-                                    '&:hover': {
-                                        textDecoration: 'underline'
-                                    }
-                                }}
-                                onClick={() => navigator('/forgot-password')}
-                            >
-                                忘记密码？
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    color: 'primary.main',
-                                    cursor: 'pointer',
-                                    '&:hover': {
-                                        textDecoration: 'underline'
-                                    }
-                                }}
-                                onClick={() => navigator('/register')}
-                            >
-                                注册账号
-                            </Typography>
-                        </Box>
                     </Box>
                 </Box>
             </Card>
