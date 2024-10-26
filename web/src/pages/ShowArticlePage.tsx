@@ -1,25 +1,20 @@
 import { useParams } from "react-router-dom";
-import useArticleStore from "@/stores/article";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Grid, Typography, Box, Paper, Container, Skeleton } from "@mui/material";
-
-const MarkdownRenderer = lazy(() => import("@/components/MarkdownRender"));
+import MarkdownRenderer from "@/components/MarkdownRender";
 import Comments from "@/components/Comments.tsx";
+import { api } from "@/utils/axios.ts";
 
 export default function ShowArticlePage() {
     const { id } = useParams<{ id: string }>();
-    const articleStore = useArticleStore();
-    const [content, setContent] = useState<string | undefined>(undefined);
+    const [content, setContent] = useState<string>();
 
     useEffect(() => {
-        if (!articleStore?.articles) {
-            articleStore?.fetchArticles();
-        }
-        const foundArticle = articleStore.articles?.find((item) => item.id === Number(id));
-        if (foundArticle) {
-            setContent(foundArticle.content);
-        }
-    }, [articleStore?.articles, id]);
+        api().get(`/articles/${id}`).then((res) => {
+            const r = res.data;
+            setContent(r.data.content);
+        });
+    }, []);
 
     const LoadingSkeleton = () => (
         <Box sx={{ width: "100%" }}>
@@ -73,12 +68,6 @@ export default function ShowArticlePage() {
                                         color: "text.secondary",
                                         lineHeight: 1.7,
                                         my: 2,
-                                    },
-                                    "& code": {
-                                        bgcolor: "grey.100",
-                                        p: 0.5,
-                                        borderRadius: 1,
-                                        fontFamily: "monospace",
                                     },
                                     "& pre": {
                                         bgcolor: "grey.900",

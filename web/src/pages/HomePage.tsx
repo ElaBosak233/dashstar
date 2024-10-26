@@ -1,5 +1,4 @@
-import useArticleStore from "@/stores/article.ts";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
     Box,
     Button,
@@ -18,17 +17,25 @@ import {
 import { Article } from "@/models/article.ts";
 import { Create, Add } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "@/stores/auth.ts";
+import { api } from "@/utils/axios.ts";
+import useSiteStore from "@/stores/site.ts";
 
 export default function HomePage() {
-    const articleStore = useArticleStore();
+    const authStore = useAuthStore();
+    const siteStore = useSiteStore();
     const navigator = useNavigate();
 
-    useEffect(() => {
-        articleStore.fetchArticles();
-        console.log(articleStore.articles);
-    }, []);
+    const [articles, setArticles] = useState<Array<Article>>();
 
-    const hasArticles = articleStore.articles && articleStore.articles.length > 0;
+    useEffect(() => {
+        api().get("/articles").then(
+            (res) => {
+                const r = res.data;
+                setArticles(r.data?.reverse());
+            },
+        );
+    }, []);
 
     return (
         <Container maxWidth="md" sx={{ py: 4 }}>
@@ -51,26 +58,28 @@ export default function HomePage() {
                     我的文章
                 </Typography>
 
-                <Button
-                    variant="contained"
-                    startIcon={<Add />}
-                    onClick={() => {
-                        navigator("/articles/new");
-                        articleStore.setCurrentTitle("新建文章");
-                    }}
-                    sx={{
-                        borderRadius: 2,
-                        px: 3,
-                        py: 1,
-                    }}
-                >
-                    新建文章
-                </Button>
+                {authStore?.user?.role === "admin" && (
+                    <Button
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={() => {
+                            navigator("/articles/new");
+                            siteStore.setCurrentTitle("新建文章");
+                        }}
+                        sx={{
+                            borderRadius: 2,
+                            px: 3,
+                            py: 1,
+                        }}
+                    >
+                        新建文章
+                    </Button>
+                )}
             </Stack>
 
             {/* 文章列表 */}
             <Paper elevation={2} sx={{ borderRadius: 2 }}>
-                {!hasArticles ? (
+                {!articles?.length ? (
                     <Box sx={{ p: 4, textAlign: "center" }}>
                         <Typography color="text.secondary" sx={{ mb: 2 }}>
                             还没有写过文章
@@ -80,7 +89,7 @@ export default function HomePage() {
                             startIcon={<Add />}
                             onClick={() => {
                                 navigator("/articles/new");
-                                articleStore.setCurrentTitle("新建文章");
+                                siteStore.setCurrentTitle("新建文章");
                             }}
                         >
                             创建第一篇文章
@@ -88,7 +97,7 @@ export default function HomePage() {
                     </Box>
                 ) : (
                     <List sx={{ p: 0 }}>
-                        {articleStore.articles?.map((e: Article, index: number) => (
+                        {articles?.map((e: Article, index: number) => (
                             <Box key={e.id}>
                                 {index > 0 && <Divider />}
                                 <ListItem
@@ -112,13 +121,14 @@ export default function HomePage() {
                                                 alignItems="center"
                                             >
                                                 <Button
-                                                    onClick={() => {
-                                                        navigator(`/articles/${e.id}`);
-                                                        articleStore.setCurrentTitle(e.title || "");
-                                                    }}
+                                                    fullWidth
                                                     sx={{
                                                         textAlign: "left",
                                                         textTransform: "none",
+                                                    }}
+                                                    onClick={() => {
+                                                        navigator(`/articles/${e.id}`);
+                                                        siteStore.setCurrentTitle(e.title || "");
                                                     }}
                                                 >
                                                     <ListItemText
@@ -127,25 +137,29 @@ export default function HomePage() {
                                                             variant: "h6",
                                                             color: "text.primary",
                                                         }}
+                                                        secondary={new Date(Number(e.created_at) * 1000).toLocaleString()}
                                                     />
                                                 </Button>
 
-                                                <IconButton
-                                                    color="primary"
-                                                    onClick={() => {
-                                                        navigator(`/articles/${e.id}/edit`);
-                                                        articleStore.setCurrentTitle("编辑");
-                                                    }}
-                                                    sx={{
-                                                        ml: 2,
-                                                        "&:hover": {
-                                                            bgcolor: "primary.light",
-                                                            color: "primary.contrastText",
-                                                        },
-                                                    }}
-                                                >
-                                                    <Create />
-                                                </IconButton>
+
+                                                {authStore?.user?.role === "admin" && (
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={() => {
+                                                            navigator(`/articles/${e.id}/edit`);
+                                                            siteStore.setCurrentTitle("编辑");
+                                                        }}
+                                                        sx={{
+                                                            ml: 2,
+                                                            "&:hover": {
+                                                                bgcolor: "primary.light",
+                                                                color: "primary.contrastText",
+                                                            },
+                                                        }}
+                                                    >
+                                                        <Create />
+                                                    </IconButton>
+                                                )}
                                             </Stack>
                                         </CardContent>
                                     </Card>

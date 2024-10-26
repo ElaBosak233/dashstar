@@ -4,7 +4,6 @@ import { useState } from "react";
 import useAuthStore from "@/stores/auth.ts";
 import { useNavigate } from "react-router-dom";
 
-// 自定义样式组件
 const StyledPaper = styled(Paper)(({ theme }) => ({
     maxWidth: "800px",
     margin: "40px auto",
@@ -17,20 +16,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 const StyledTextField = styled(TextField)(({ theme }) => ({
     "& .MuiOutlinedInput-root": {
         borderRadius: theme.spacing(1.5),
-        backgroundColor: theme.palette.grey[50],
-        "&:hover": {
-            backgroundColor: theme.palette.grey[100],
-        },
-        "&.Mui-focused": {
-            backgroundColor: "#fff",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-        },
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: theme.palette.grey[200],
     },
     "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-        borderColor: theme.palette.primary.main,
         borderWidth: "2px",
     },
 }));

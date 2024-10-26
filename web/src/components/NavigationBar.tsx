@@ -1,66 +1,30 @@
 import {
-    AppBar,
-    Button,
-    IconButton,
+    AppBar, Avatar, Box,
+    Button, Card, Dialog, Divider,
+    IconButton, Stack,
     Toolbar,
     Tooltip,
     Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { AccountCircle, Home, Brightness4, Brightness7 } from "@mui/icons-material";
+import { AccountCircle, Home, Brightness4, Brightness7, Logout } from "@mui/icons-material";
 import useAuthStore from "@/stores/auth.ts";
 import { useNavigate } from "react-router-dom";
-import useArticleStore from "@/stores/article.ts";
-import React, { createContext, useContext, useMemo } from "react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
-
-// 创建 ThemeContext
-const ThemeContext = createContext({
-    toggleTheme: () => {},
-    isDarkMode: false,
-});
-
-// 创建自定义 hook 来访问主题上下文
-export const useThemeContext = () => useContext(ThemeContext);
-
-// 主题切换上下文组件
-export const ThemeContextProvider = ({ children }: { children: React.ReactNode }) => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
-
-    const theme = useMemo(() => createTheme({
-        palette: {
-            mode: isDarkMode ? "dark" : "light",
-        },
-    }), [isDarkMode]);
-
-    const toggleTheme = () => {
-        setIsDarkMode((prevMode) => !prevMode);
-    };
-
-    return (
-        <ThemeContext.Provider value={{ toggleTheme, isDarkMode }}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline /> {/* 确保 MUI 的样式全局生效 */}
-                {children}
-            </ThemeProvider>
-        </ThemeContext.Provider>
-    );
-};
-
+import useSiteStore from "@/stores/site.ts";
 
 export default function NavigationBar() {
     const [articleTitle, setArticleTitle] = useState<string>();
     const authStore = useAuthStore();
-    const token = useAuthStore((state) => state.token);
+    const token = authStore?.token;
     const navigator = useNavigate();
-    const articleStore = useArticleStore();
-    const { toggleTheme, isDarkMode } = useThemeContext();  // 使用上下文
+    const siteStore = useSiteStore();
+    const [showDialog, setShowDialog] = useState(false);
+    const { toggleTheme, isDarkMode } = useSiteStore();
 
     useEffect(() => {
-        setArticleTitle(articleStore?.currentTitle);
-        console.log(articleTitle);
-    }, [articleStore.currentTitle]);
+        setArticleTitle(siteStore?.currentTitle);
+    }, [siteStore.currentTitle]);
+
 
     return (
         <>
@@ -75,30 +39,35 @@ export default function NavigationBar() {
                 <Toolbar
                     sx={{
                         display: "flex",
-                        justifyContent: "space-between",
                         paddingX: 2,
                     }}
                 >
                     {/* 首页按钮 */}
-                    <IconButton
-                        onClick={() => {
-                            navigator("/");
-                            articleStore.setCurrentTitle("首页");
-                        }}
-                        color="inherit"
-                        sx={{
-                            marginRight: 2,
-                        }}
-                    >
-                        <Home />
-                    </IconButton>
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: "start",
+                        flex: 1,
+                    }}>
+                        <IconButton
+                            onClick={() => {
+                                navigator("/");
+                                siteStore.setCurrentTitle("首页");
+                            }}
+                            color="inherit"
+                            sx={{
+                                marginRight: 2,
+                            }}
+                        >
+                            <Home />
+                        </IconButton>
+                    </Box>
 
                     {/* 文章标题 */}
                     <Typography
                         variant="h6"
                         color="inherit"
                         sx={{
-                            flexGrow: 1,
+                            flexShrink: 0,
                             textAlign: "center",
                             fontWeight: 500,
                         }}
@@ -106,59 +75,96 @@ export default function NavigationBar() {
                         {articleTitle}
                     </Typography>
 
-                    {/* 明暗模式切换按钮 */}
-                    <Tooltip title="Toggle light/dark theme">
-                        <IconButton onClick={toggleTheme} color="inherit">
-                            {isDarkMode ? <Brightness7 /> : <Brightness4 />}
-                        </IconButton>
-                    </Tooltip>
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: "end",
+                        flex: 1,
+                    }}>
+                        {/* 明暗模式切换按钮 */}
+                        <Tooltip title="切换明暗色主题">
+                            <IconButton onClick={toggleTheme} color="inherit">
+                                {isDarkMode ? <Brightness7 /> : <Brightness4 />}
+                            </IconButton>
+                        </Tooltip>
 
-                    {/* 用户操作区 */}
-                    {token ? (
-                        <>
-                            <Tooltip title="Logout">
-                                <IconButton
-                                    onClick={() => {
-                                        authStore.logout();
-                                    }}
+                        {/* 用户操作区 */}
+                        {token ? (
+                            <>
+                                <Tooltip title="信息">
+                                    <IconButton
+                                        onClick={() => {
+                                            setShowDialog(true)
+                                        }}
+                                        color="inherit"
+                                        sx={{
+                                            marginLeft: 2,
+                                        }}
+                                    >
+                                        <AccountCircle />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="登出">
+                                    <IconButton onClick={() => authStore.logout()}
+                                                color="inherit"
+                                                sx={{ marginLeft: 2 }}
+                                    >
+                                        <Logout />
+                                    </IconButton>
+                                </Tooltip>
+                            </>
+                        ) : (
+                            <>
+                                <Button
                                     color="inherit"
+                                    onClick={() => {
+                                        navigator("/login");
+                                    }}
                                     sx={{
-                                        marginLeft: 2,
+                                        marginRight: 1,
+                                        textTransform: "none",
                                     }}
                                 >
-                                    <AccountCircle />
-                                </IconButton>
-                            </Tooltip>
-                        </>
-                    ) : (
-                        <>
-                            <Button
-                                color="inherit"
-                                onClick={() => {
-                                    navigator("/login");
-                                }}
-                                sx={{
-                                    marginRight: 1,
-                                    textTransform: "none",
-                                }}
-                            >
-                                登录
-                            </Button>
-                            <Button
-                                color="inherit"
-                                onClick={() => {
-                                    navigator("/register");
-                                }}
-                                sx={{
-                                    textTransform: "none",
-                                }}
-                            >
-                                注册
-                            </Button>
-                        </>
-                    )}
+                                    登录
+                                </Button>
+                                <Button
+                                    color="inherit"
+                                    onClick={() => {
+                                        navigator("/register");
+                                    }}
+                                    sx={{
+                                        textTransform: "none",
+                                    }}
+                                >
+                                    注册
+                                </Button>
+                            </>
+                        )}
+                    </Box>
                 </Toolbar>
             </AppBar>
+            <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
+                <Card sx={{ padding: 2, minWidth: 300 }}>
+                    <Stack alignItems="center" spacing={2}>
+                        <Avatar sx={{ width: 56, height: 56 }}> {authStore.user?.username?.charAt(0)} </Avatar>
+                        <Typography variant="h6">{authStore.user?.username}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {authStore.user?.nickname}
+                        </Typography>
+                        <Divider sx={{ width: "100%" }} />
+                        <Typography variant="body2" color="text.secondary">
+                            Token: {authStore.token}
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setShowDialog(false)}
+                            sx={{ width: "100%" }}
+                        >
+                            关闭
+                        </Button>
+                    </Stack>
+                </Card>
+            </Dialog>
 
             <Toolbar />
         </>

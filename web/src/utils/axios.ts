@@ -22,7 +22,7 @@ export function api(): AxiosInstance {
         (error) => {
             if (error.response?.status === 401) {
                 useAuthStore.getState().logout();
-                location.href = "/";
+                location.href = "/login";
             }
             return Promise.reject(error);
         },

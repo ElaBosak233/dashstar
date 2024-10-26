@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
-import useArticleStore from "@/stores/article.ts";
+import { useEffect, useState } from "react";
 import { Button, Stack, TextField, Typography, Container, Paper } from "@mui/material";
 import { api } from "@/utils/axios.ts";
 
@@ -8,11 +7,15 @@ export default function EditArticlePage() {
     const { id } = useParams<{ id: string }>();
     const [title, setTitle] = useState<string>();
     const [content, setContent] = useState<string>();
-    const articleStore = useArticleStore();
     const navigation = useNavigate();
 
-    const article = articleStore.articles?.find((item) =>
-        item.id === Number(id));
+    useEffect(() => {
+        api().get(`/articles/${id}`).then((res) => {
+            const r = res.data;
+            setTitle(r.data.title);
+            setContent(r.data.content);
+        })
+    }, []);
 
     function handleSubmit() {
         api().put("articles/", {
@@ -51,7 +54,7 @@ export default function EditArticlePage() {
                             label="标题"
                             variant="outlined"
                             fullWidth
-                            defaultValue={article?.title}
+                            value={title || ""}
                             onChange={(e) => setTitle(e.target.value)}
                             sx={{
                                 "& .MuiOutlinedInput-root": {
@@ -64,7 +67,7 @@ export default function EditArticlePage() {
                             label="内容"
                             variant="outlined"
                             fullWidth
-                            defaultValue={article?.content}
+                            value={content || ""}
                             minRows={8}
                             maxRows={50}
                             multiline

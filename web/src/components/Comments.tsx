@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, Container, Divider, Grid2, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, Divider, Grid2, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { api } from "@/utils/axios.ts";
 import { Comment } from "@/models/comment.ts";
@@ -6,21 +6,24 @@ import useAuthStore from "@/stores/auth.ts";
 
 
 function MyComment({ comment, firstName, created_at }: {
-    comment: string; firstName: string; created_at: number
+    comment?: string; firstName?: string; created_at?: number
 }) {
-    const date = new Date(created_at * 1000);
+    const date = new Date(Number(created_at) * 1000);
     return (
         <>
-            <Grid2 container sx={{ backgroundColor: "#f0f0f0" }}>
+            <Grid2 container sx={{ backgroundColor: "#f0f0f02d" }}>
                 <Grid2 display="flex" sx={{ margin: 2 }}>
                     <Avatar sx={{ marginRight: 4, alignContent: "center" }}>
-                        {firstName}
+                        {firstName?.[0]}
                     </Avatar>
-                    <Typography variant="body1">{comment}</Typography>
-                    <Typography>{date.toLocaleString()}</Typography>
+                    <Box>
+                        {comment ? (
+                            <Typography variant="body1">{comment}</Typography>
+                        ) : (<Typography variant="body2" fontStyle="italic">...</Typography>)}
+                        <Typography variant="caption">{date.toLocaleString()}</Typography>
+                    </Box>
                 </Grid2>
             </Grid2>
-            <Divider></Divider>
         </>
     );
 }
@@ -34,7 +37,8 @@ export default function Comments({ id }: { id: number }) {
     function fetchComments() {
         api().get(`/articles/${id}/comments`).then(
             (res) => {
-                setComments(res.data.data);
+                const r = res.data;
+                setComments(r.data);
             },
         );
     }
@@ -50,6 +54,7 @@ export default function Comments({ id }: { id: number }) {
             user_id: authStore?.user?.id,
         }).then(() => {
             fetchComments();
+            setCommentSend("");
         });
     }
 
@@ -68,6 +73,7 @@ export default function Comments({ id }: { id: number }) {
                         minRows="2"
                         multiline
                         fullWidth
+                        value={commentSend}
                         onChange={(e) => setCommentSend(e.target.value)}
                     />
                     <Button variant="contained" onClick={submitComment}>评论</Button>

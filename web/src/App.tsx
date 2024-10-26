@@ -2,16 +2,31 @@
 
 import { RouterProvider } from "react-router-dom";
 import router from "@/router";
-import { ThemeContextProvider } from "@/components/NavigationBar.tsx";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import useSiteStore from "@/stores/site.ts";
+import { ThemeContext } from "@emotion/react";
+import { useMemo } from "react";
 
 
 function App() {
+    const siteStore = useSiteStore();
+
+    const theme = useMemo(() => createTheme({
+        palette: {
+            mode: siteStore?.isDarkMode ? "dark" : "light",
+        },
+    }), [siteStore?.isDarkMode]);
+
     return (
         <>
-            <ThemeContextProvider>
+            <ThemeContext.Provider value={{ toggleTheme: siteStore?.toggleTheme, isDarkMode: siteStore?.isDarkMode }}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline /> {/* 确保 MUI 的样式全局生效 */}
+                    <RouterProvider router={router} fallbackElement={<div>加载中. . . .</div>} />
+                </ThemeProvider>
+            </ThemeContext.Provider>
 
-                <RouterProvider router={router} fallbackElement={<div>加载中. . . .</div>} />
-            </ThemeContextProvider>
         </>
     );
 }

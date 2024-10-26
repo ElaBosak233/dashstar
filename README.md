@@ -1,6 +1,7 @@
 # Java 高级编程（JavaEE 程序设计与应用开发）期末作业教程
 
-本教程及相关代码由 [@ElaBosak233](https://github.com/elabosak233) 撰写于 2024 学年第一学期，用于给 23 届学生在完成 Java
+本教程及相关代码由后端 [@ElaBosak233](https://github.com/elabosak233) 和前端 [@llc141525](https://github.com/llc141525)
+撰写于 2024 学年第一学期，用于给 23 届学生在完成 Java
 高级编程期末作业时提供指导。
 
 ## 前言
@@ -247,12 +248,12 @@ npm install @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui
 
 然后, 在`src`下新建几个文件夹
 
-- `models`用于存放模型的**类型**, 如user, article, comment
-- `pages` 用于存放变换的**页面**
-- `stores` 用于前端**持久化**
-- `utils` 用于放置一些**工具**, 例如 axios
-- `layouts` 用于**布局**
-- `components` 存放一些可复用的**组件**
+- `models` 用于存放模型的 **类型**, 如user, article, comment
+- `pages` 用于存放变换的 **页面**
+- `stores` 用于前端 **持久化**
+- `utils` 用于放置一些 **工具**, 例如 axios
+- `layouts` 用于 **布局**
+- `components` 存放一些可复用的 **组件**
 - `router` 存放路由配置
 
 ## 开发（后端）
@@ -472,20 +473,18 @@ REST 的设计理念，它到底应该被归为文章，还是应该被归为评
 
 但你也看见了，在这里，我愿意将这个方法归属于文章资源。
 
-## 开发（前端）
-
-### API的测试
+## API 测试
 
 本教程要求后端实现以下接口.
 你可以使用[apifox](https://apifox.com/)测试接口
 
-#### 用户
+### 用户
 
 点击[后端](src/main/java/dev/e23/dashstar/handler/UserHandler.java)查看具体实现
 
-##### 1.注册:  http://localhost:8080/api/users/register
+#### 1.注册:  http://localhost:8080/api/users/register
 
-- 使用**POST**方式传参.
+- 使用 **POST** 方式传参.
 - 请求体是 **JSON** 格式的 (_点击[这里](https://www.oracle.com/cn/database/what-is-json/)了解 JSON_).
   例如用于注册一个用户名是 `admin`, 密码是 `123456` 的用户, 它的请求体需要是这样的:
 
@@ -497,25 +496,28 @@ REST 的设计理念，它到底应该被归为文章，还是应该被归为评
 ```
 
 - 请求头有两个参数, `Accept` 和 `Content-Type` 它们的值都是 `application/json`
-- 如果注册成功则返回一个JSON对象 `{"code":"CREATED"}`
+- 如果注册成功则返回一个 JSON 对象 `{"code":"CREATED"}`
 
-##### 2.登录: http://localhost:8080/api/users/login
+#### 2.登录: http://localhost:8080/api/users/login
 
 - 使用 **POST** 方法传参.
-- 请求体同样是账号`username`密码`password`.
-- 登陆成功要返回用户的所有信息, 昵称 `nickname`, 用户名`username`, 权限 `role`, 用户的索引`id`, 加密完成的密码`passward`
-  ,验证登录成功的`code`, 还有最重要的`token`用于鉴权.
+- 请求体同样是账号 `username` 密码 `password`.
+- 登陆成功要返回用户的所有信息, 昵称 `nickname`, 用户名 `username`, 权限 `role`, 用户的索引 `id`,
+  加密完成的密码 `passward`
+  ,验证登录成功的 `code`, 还有最重要的 `token` 用于鉴权.
 
-##### 3. 获取所有用户: http://localhost:8080/api/users
+#### 3. 获取所有用户: http://localhost:8080/api/users
 
 - 使用 **GET** 方法传参
 - 请求头需要额外携带 `Authorization` 头, 内容是登录获得的 `token`. 也就是说想要使用这个 `API`
-  需要携带三个请求头: `Authorization, Accept, Content-Type`其中 `Accept` 和 `Content-Type` 的内容同注册接口一样 .
-- 请求成功后后端返回一个 **JSON** 格式的数据, 它的 `data`属性包含了所有用户的详细信息.
+  需要携带三个请求头: `Authorization, Accept, Content-Type` 其中 `Accept` 和 `Content-Type` 的内容同注册接口一样 .
+- 请求成功后后端返回一个 **JSON** 格式的数据, 它的 `data` 属性包含了所有用户的详细信息.
 
 如果后端实现了这些接口, 那么前端就可以实现注册, 登录, 获取所有用户
 
-设置代理 [](web/vite.config.ts)
+## 开发（前端）
+
+设置代理[](./web/vite.config.ts)
 
 ## 附录
 

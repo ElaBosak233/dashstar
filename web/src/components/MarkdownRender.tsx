@@ -1,49 +1,72 @@
-import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Typography, Link, Box, Paper } from '@mui/material';
 
 // 定义 Markdown 渲染器组件
-const MarkdownRenderer = ({ markdown }) => {
+const MarkdownRenderer = ({ markdown }: { markdown: any}) => {
     return (
         <Paper sx={{ p: 2 }}>
             <ReactMarkdown
                 // 启用 GitHub 风格的 Markdown 支持
                 remarkPlugins={[remarkGfm]}
                 components={{
-                    // 自定义标题渲染
-                    h1: ({ node, ...props }) => (
-                        <Typography variant="h3" gutterBottom {...props} />
+                    h1: ({ children }) => (
+                        <Typography component="h1" variant="h3" gutterBottom>
+                            {children}
+                        </Typography>
                     ),
-                    h2: ({ node, ...props }) => (
-                        <Typography variant="h4" gutterBottom {...props} />
+                    h2: ({ children }) => (
+                        <Typography component="h2" variant="h4" gutterBottom>
+                            {children}
+                        </Typography>
                     ),
-                    h3: ({ node, ...props }) => (
-                        <Typography variant="h5" gutterBottom {...props} />
+                    h3: ({ children }) => (
+                        <Typography component="h3" variant="h5" gutterBottom>
+                            {children}
+                        </Typography>
                     ),
-                    h4: ({ node, ...props }) => (
-                        <Typography variant="h6" gutterBottom {...props} />
+                    h4: ({ children }) => (
+                        <Typography component="h4" variant="h6" gutterBottom>
+                            {children}
+                        </Typography>
                     ),
-                    p: ({ node, ...props }) => <Typography variant="body1" {...props} />,
-                    a: ({ node, ...props }) => <Link {...props} />,
-                    ul: ({ node, ...props }) => (
-                        <Box component="ul" sx={{ pl: 4 }} {...props} />
+                    p: ({ children }) => (
+                        <Typography component="p" variant="body1">
+                            {children}
+                        </Typography>
                     ),
-                    ol: ({ node, ...props }) => (
-                        <Box component="ol" sx={{ pl: 4 }} {...props} />
+                    a: ({ href, children }) => (
+                        <Link href={href} target="_blank" rel="noopener">
+                            {children}
+                        </Link>
                     ),
-                    li: ({ node, ...props }) => <Typography component="li" {...props} />,
-                    code: ({ node, ...props }) => (
+                    ul: ({ children }) => (
+                        <Box component="ul" sx={{ pl: 4 }}>
+                            {children}
+                        </Box>
+                    ),
+                    ol: ({ children }) => (
+                        <Box component="ol" sx={{ pl: 4 }}>
+                            {children}
+                        </Box>
+                    ),
+                    li: ({ children }) => (
+                        <Typography component="li" variant="body1">
+                            {children}
+                        </Typography>
+                    ),
+                    code: ({ children }) => (
                         <Box
-                            component="pre"
+                            component="code"
                             sx={{
-                                backgroundColor: '#f5f5f5',
                                 p: 1,
                                 borderRadius: 1,
                                 overflow: 'auto',
+                                fontFamily: 'monospace',
                             }}
-                            {...props}
-                        />
+                        >
+                            {children}
+                        </Box>
                     ),
                 }}
             >
