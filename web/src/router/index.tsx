@@ -1,57 +1,70 @@
 // 路由的配置文件.
 // writeArticlePage , homePage,  showArticlePage 组件都添加了路由守卫, 防止退出登录后撤回到之前账号的显示和写的界面.
+import { createBrowserRouter, RouteObject } from "react-router-dom";
 
-import { lazy } from "react";
-import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
-
-// 使用懒加载提升性能.
-
-const HomePage = lazy(() => import("@/pages/homePage"));
-const LogInPage = lazy(() => import("@/pages/logInPage.tsx"));
-const LogOnPage = lazy(() => import("@/pages/logOnPage.tsx"));
-const ShowArticlePage = lazy(() => import("@/pages/showArticlePage"));
-const WriteArticlePage = lazy(() => import("@/pages/writeArticlePage"));
-const NotFoundPage = lazy(() => import("@/pages/notFoundPage"));
-const Layout = lazy(() => import("@/layouts"));
-const RouteGuard = lazy(() => import("./routeGuard.tsx"));
 const routes: RouteObject[] = [
     {
         // 根路由是 layout 保证布局永远被用到.
         path: "/",
-        element: <Layout />,
+        lazy: async () => {
+            const Layout = await import("@/layouts");
+            return { Component: Layout.default };
+        },
         children: [
-            // 把 / 重定向到 /home, 保证默认页面是 /home
             {
                 index: true,
-                element: <Navigate to="/home" />,
+                lazy: async () => {
+                    const Home = await import("@/pages/HomePage");
+                    return { Component: Home.default };
+                },
             },
             {
-                element: <RouteGuard />,
+                lazy: async () => {
+                    const RouteGuard = await import("./routeGuard");
+                    return { Component: RouteGuard.default };
+                },
                 children: [
                     {
-                        path: "/home",
-                        element: <HomePage />,
+                        path: "/articles/:id",
+                        lazy: async () => {
+                            const ShowArticle = await import("@/pages/ShowArticlePage");
+                            return { Component: ShowArticle.default };
+                        },
                     }, {
-                        path: "/showArticle/:id",
-                        element: <ShowArticlePage />,
+                        path: "/articles/:id/edit",
+                        lazy: async () => {
+                            const EditArticle = await import("@/pages/EditArticle.tsx");
+                            return { Component: EditArticle.default };
+                        },
                     }, {
-                        path: "/writeArticle",
-                        element: <WriteArticlePage />,
+                        path: "/articles/new",
+                        lazy: async () => {
+                            const CreateArticle = await import("@/pages/CreateArticle.tsx");
+                            return { Component: CreateArticle.default };
+                        },
                     },
-
                 ],
             },
             {
                 path: "/login",
-                element: <LogInPage />,
+                lazy: async () => {
+                    const LoginPage = await import("@/pages/LogInPage");
+                    return { Component: LoginPage.default };
+                },
             },
             {
                 path: "/logon",
-                element: <LogOnPage />,
+                lazy: async () => {
+                    const LogonPage = await import("@/pages/LogOnPage");
+                    return { Component: LogonPage.default };
+                },
             },
             {
                 path: "*",
-                element: <NotFoundPage />,
+                lazy: async () => {
+                    const NotFoundPage = await import("@/pages/NotFoundPage");
+                    return { Component: NotFoundPage.default };
+                },
             },
         ],
 

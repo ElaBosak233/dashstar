@@ -1,20 +1,19 @@
-// 登录界面
+// 注册界面
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { api } from "@/utils/axios.ts";
 import { Button, Card, Container, InputAdornment, TextField, Typography } from "@mui/material";
-import { AccountCircle, Key } from "@mui/icons-material";
+import { AccountCircle, BadgeRounded, Key } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "@/stores/auth.ts";
 
-export default function LogInPage() {
+export default function LogOnPage() {
     const [formData, setFormData] = useState({
         userName: "",
         passWord: "",
+        nickName: "",
     });
     const navigator = useNavigate();
 
-    const authStore = useAuthStore();
     const handleInputChange =
         (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
             setFormData((prev) => ({
@@ -25,16 +24,18 @@ export default function LogInPage() {
 
     function handleSubmit() {
         api()
-            .post("/users/login", {
+            .post("users/register", {
                 username: formData.userName,
                 password: formData.passWord,
+                nickname: formData.nickName || formData.userName,
             })
             .then((res) => {
-                console.log(res);
                 const r = res.data;
-                authStore.setToken(r.token);
-                authStore.setUser(r.data);
-                navigator("/home");
+                console.log(r);
+                if (r.code === "CREATED") {
+                    alert("注册成功");
+                    navigator("/");
+                }
             });
     }
 
@@ -50,7 +51,7 @@ export default function LogInPage() {
                     gap: 2,
                 }}
             >
-                <Typography>登录界面</Typography>
+                <Typography> 注册界面</Typography>
 
                 <TextField
                     fullWidth
@@ -66,6 +67,22 @@ export default function LogInPage() {
                             ),
                         },
                     }}
+                />
+                <TextField
+                    fullWidth
+                    label="输入你的昵称"
+                    value={formData.nickName}
+                    onChange={handleInputChange("nickName")}
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <BadgeRounded />
+                                </InputAdornment>
+                            ),
+                        },
+                    }}
+                    placeholder="可以为空"
                 />
 
                 <TextField
@@ -90,7 +107,7 @@ export default function LogInPage() {
                     color="primary"
                     variant="contained"
                 >
-                    登录
+                    注册
                 </Button>
             </Container>
         </Card>

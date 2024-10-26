@@ -7,7 +7,7 @@ import useAuthStore from "@/stores/auth.ts";
 import { useNavigate } from "react-router-dom";
 
 export default function NavigationBar() {
-    const [ArticleTitle, setArticleTitle] = useState("11");
+    const [articleTitle, _setArticleTitle] = useState("11");
     const [openMenu, setOpenMenu] = useState(false);
     const token = useAuthStore((state) => state.token);
     const navigator = useNavigate();
@@ -16,11 +16,11 @@ export default function NavigationBar() {
         <>
             <AppBar>
                 <Toolbar>
-                    <IconButton onClick={()=>{navigator("/home")}}>
+                    <IconButton onClick={()=>{navigator("/")}}>
                         <Home />
                     </IconButton>
                     <Typography sx={{ flexGrow: 1 }}>
-                        {ArticleTitle}
+                        {articleTitle}
                     </Typography>
                     {token ? (
                         <>

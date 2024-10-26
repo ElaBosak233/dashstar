@@ -3,7 +3,7 @@
 // 2. username => 用户名
 // 3. password => 密码
 // 4. nickname => 昵称
-export interface TypeUser {
+export interface User {
     id?: number;
     username?: string;
     nickname?: string;

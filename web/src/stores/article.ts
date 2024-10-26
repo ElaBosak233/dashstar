@@ -1,33 +1,27 @@
 // 持久化存储文章数据
 
 import { Article } from "@/models/article.ts";
-import { createJSONStorage, persist } from "zustand/middleware";
 import { create } from "zustand";
 import { api } from "@/utils/axios.ts";
 
 
-interface articleState {
-    Article?: Array<Article>;
-    setAllArticle: () => void;
+interface ArticleState {
+    articles?: Array<Article>;
+    fetchArticles: () => void;
 }
 
 
-const useArticleStore = create<articleState>()(
-    persist(
-        (set, get) => ({
-            setAllArticle: async () => {
-                api().get("/articles").then(
-                    (res) => {
-                        set({ Article: res.data.data });
-                    },
-                );
-            },
-
-        }), {
-            name: "article_store",
-            storage: createJSONStorage(() => localStorage),
+const useArticleStore = create<ArticleState>()(
+    (set, _get) => ({
+        fetchArticles: async () => {
+            api().get("/articles").then(
+                (res) => {
+                    set({ articles: res.data.data });
+                },
+            );
         },
-    ),
+
+    })
 );
 
 export default useArticleStore;

@@ -2,21 +2,25 @@
 
 
 import { useParams } from "react-router-dom";
-import useArticleStore from "@/stores/article.ts";
+import useArticleStore from "@/stores/article";
 import { useEffect, useState } from "react";
+import MarkdownRenderer from "@/components/MarkdownRender.tsx";
 
 export default function ShowArticlePage() {
     const { id } = useParams<{id:string}>()
     const articleStore = useArticleStore()
     const[ content, setContent] = useState<string>()
     useEffect(() => {
-        setContent(articleStore.Article?.find((item) => item.id === Number(id))?.content);
+        setContent(articleStore.articles?.find((item) => item.id === Number(id))?.content);
     }, []);
    return(
         <>
+
+            <MarkdownRenderer content={content}></MarkdownRenderer>
             {
                 content
             }
+
         </>
    )
 }

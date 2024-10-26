@@ -2,23 +2,23 @@
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { TypeUser } from "../models/typeUser.ts";
+import { User } from "../models/user.ts";
 
-interface authState {
-    user?: TypeUser;
+interface AuthState {
+    user?: User;
     token?: string;
     setToken: (token: string) => void;
-    setUser: (user: TypeUser) => void;
+    setUser: (user: User) => void;
     logout: () => void;
 }
 
-const useAuthStore = create<authState>()(
+const useAuthStore = create<AuthState>()(
     persist(
         (set) => ({
             setToken: (token: string) => {
                 set({ token: token });
             },
-            setUser: (user: TypeUser) => {
+            setUser: (user: User) => {
                 set({ user: user });
             },
             logout: () => {
@@ -26,11 +26,11 @@ const useAuthStore = create<authState>()(
                     user: undefined,
                     token: undefined,
                 });
-                localStorage.removeItem("auth_state")
+                // localStorage.removeItem("auth_state")
             },
         }),
         {
-            name: "auth_state",
+            name: "auth_store",
             storage: createJSONStorage(() => localStorage),
         },
     ),
