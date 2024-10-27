@@ -64,7 +64,7 @@ export default function NavigationBar() {
 
                     {/* 文章标题 */}
                     <Typography
-                        variant="h6"
+                        variant="h4"
                         color="inherit"
                         sx={{
                             flexShrink: 0,
@@ -93,7 +93,7 @@ export default function NavigationBar() {
                                 <Tooltip title="信息">
                                     <IconButton
                                         onClick={() => {
-                                            setShowDialog(true)
+                                            setShowDialog(true);
                                         }}
                                         color="inherit"
                                         sx={{
@@ -145,14 +145,16 @@ export default function NavigationBar() {
             <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                 <Card sx={{ padding: 2, minWidth: 300 }}>
                     <Stack alignItems="center" spacing={2}>
-                        <Avatar sx={{ width: 56, height: 56 }}> {authStore.user?.username?.charAt(0)} </Avatar>
-                        <Typography variant="h6">{authStore.user?.username}</Typography>
+                        <Avatar sx={{ width: 56, height: 56 ,bgcolor:"primary.main"}}> {authStore.user?.username?.slice(0,4)} </Avatar>
+                        <Typography variant="h6">用户名: {authStore.user?.username}</Typography>
                         <Typography variant="body2" color="text.secondary">
-                            {authStore.user?.nickname}
+                            昵称: {authStore.user?.nickname ? authStore.user?.nickname : "无"}
                         </Typography>
                         <Divider sx={{ width: "100%" }} />
-                        <Typography variant="body2" color="text.secondary">
-                            Token: {authStore.token}
+
+                        <Typography variant="body2" color="text.secondary"
+                                    sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                            TOKEN: {authStore.token}
                         </Typography>
                         <Button
                             variant="contained"

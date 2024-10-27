@@ -17,6 +17,7 @@ export default function LogInPage() {
         userName: "",
         passWord: "",
     });
+    const [error, setError] = useState({ username: false, password: false });
     const navigator = useNavigate();
     const authStore = useAuthStore();
 
@@ -39,25 +40,31 @@ export default function LogInPage() {
                 authStore.setToken(r.token);
                 authStore.setUser(r.data);
                 navigator("/");
+            }).catch(() => {
+            setError({ username: true, password: true });
+            setFormData({
+                userName: "",
+                passWord: "",
             });
+        });
     }
 
     return (
         <Box
             sx={{
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: '#f5f5f5'
+                minHeight: "100vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#f5f5f5",
             }}
         >
             <Card
                 sx={{
                     maxWidth: 450,
-                    width: '100%',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-                    borderRadius: '16px'
+                    width: "100%",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                    borderRadius: "16px",
                 }}
             >
                 <Box sx={{ p: 4 }}>
@@ -68,14 +75,16 @@ export default function LogInPage() {
                         sx={{
                             fontWeight: 600,
                             mb: 4,
-                            color: 'primary.main'
+                            color: "primary.main",
                         }}
                     >
                         欢迎登录
                     </Typography>
 
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                         <TextField
+                            error={error.username}
+                            helperText={error.username ? "用户名或密码错误" : ""}
                             fullWidth
                             variant="outlined"
                             label="用户名"
@@ -91,6 +100,8 @@ export default function LogInPage() {
                         />
 
                         <TextField
+                            error={error.password}
+                            helperText={error.password ? "用户名或者密码错误" : ""}
                             fullWidth
                             variant="outlined"
                             type="password"
@@ -113,10 +124,10 @@ export default function LogInPage() {
                             fullWidth
                             sx={{
                                 mt: 2,
-                                height: '48px',
-                                borderRadius: '8px',
-                                textTransform: 'none',
-                                fontSize: '1rem'
+                                height: "48px",
+                                borderRadius: "8px",
+                                textTransform: "none",
+                                fontSize: "1rem",
                             }}
                         >
                             立即登录
@@ -124,35 +135,35 @@ export default function LogInPage() {
 
                         <Box
                             sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
+                                display: "flex",
+                                justifyContent: "space-between",
                                 mt: 1,
-                                px: 1
+                                px: 1,
                             }}
                         >
                             <Typography
                                 variant="body2"
                                 sx={{
-                                    color: 'primary.main',
-                                    cursor: 'pointer',
-                                    '&:hover': {
-                                        textDecoration: 'underline'
-                                    }
+                                    color: "primary.main",
+                                    cursor: "pointer",
+                                    "&:hover": {
+                                        textDecoration: "underline",
+                                    },
                                 }}
-                                onClick={() => navigator('/forgot-password')}
+                                onClick={() => navigator("/forgot-password")}
                             >
                                 忘记密码？
                             </Typography>
                             <Typography
                                 variant="body2"
                                 sx={{
-                                    color: 'primary.main',
-                                    cursor: 'pointer',
-                                    '&:hover': {
-                                        textDecoration: 'underline'
-                                    }
+                                    color: "primary.main",
+                                    cursor: "pointer",
+                                    "&:hover": {
+                                        textDecoration: "underline",
+                                    },
                                 }}
-                                onClick={() => navigator('/register')}
+                                onClick={() => navigator("/register")}
                             >
                                 注册账号
                             </Typography>

@@ -20,7 +20,7 @@
             <!-- 设置 MySQL 用户名 -->
             <property name="jakarta.persistence.jdbc.user" value="root" />
             <!-- 设置 MySQL 密码 -->
-            <property name="jakarta.persistence.jdbc.password" value="root" />
+            <property name="jakarta.persistence.jdbc.password" value="141525" />
 
             <!-- 设置 MySQL 方言 -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />

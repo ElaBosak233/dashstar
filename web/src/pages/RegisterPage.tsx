@@ -17,6 +17,7 @@ export default function RegisterPage() {
         passWord: "",
         nickName: "",
     });
+    const [error, setError] = useState(false);
     const navigator = useNavigate();
 
     const handleInputChange =
@@ -40,7 +41,9 @@ export default function RegisterPage() {
                     alert("注册成功");
                     navigator("/");
                 }
-            });
+            }).catch(() => {
+            setError(true);
+        });
     }
 
     return (
@@ -77,6 +80,8 @@ export default function RegisterPage() {
 
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                         <TextField
+                            error={error}
+                            helperText={error ? "用户已存在" : ""}
                             fullWidth
                             variant="outlined"
                             label="用户名"
@@ -104,7 +109,6 @@ export default function RegisterPage() {
                                     </InputAdornment>
                                 ),
                             }}
-                            placeholder="可以为空"
                             helperText="选填项，默认与用户名相同"
                         />
 

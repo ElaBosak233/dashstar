@@ -25,6 +25,7 @@ export default function HomePage() {
     const authStore = useAuthStore();
     const siteStore = useSiteStore();
     const navigator = useNavigate();
+    const [users, setUsers] = useState<Array<string>>();
 
     const [articles, setArticles] = useState<Array<Article>>();
 
@@ -33,9 +34,13 @@ export default function HomePage() {
             (res) => {
                 const r = res.data;
                 setArticles(r.data?.reverse());
+                let userName = r.data.map((item: any) => item.author.username);
+                userName = userName.reverse();
+                setUsers(userName);
             },
         );
     }, []);
+
 
     return (
         <Container maxWidth="md" sx={{ py: 4 }}>
@@ -55,7 +60,7 @@ export default function HomePage() {
                         mb: 4,
                         color: "primary.main",
                     }}>
-                    我的文章
+                    所有文章
                 </Typography>
 
                 {authStore?.user?.role === "admin" && (
@@ -139,6 +144,10 @@ export default function HomePage() {
                                                         }}
                                                         secondary={new Date(Number(e.created_at) * 1000).toLocaleString()}
                                                     />
+                                                    <ListItemText
+                                                        secondary={users ? "Write BY: " + users[index] : ""}
+                                                    />
+
                                                 </Button>
 
 
