@@ -1,3 +1,5 @@
+// 主界面.显示所有文章的列表, 可以跳转到 ShowArticlePage.tsx 以显示对应的文章内容. 也可以跳转到登陆或者注册界面.
+
 import { useEffect, useState } from "react";
 import {
     Box,

@@ -240,6 +240,30 @@ npm install
 
 与此同时你会发现你的 IDEA 左侧文件夹中多出一个 web 目录，里面存放的就是前端的项目文件
 
+接下来, 继续添加依赖
+
+```bash
+npm install @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material react-router-dom zustand axios remark-gfm react-markdown
+```
+
+如果你跳过了 `npm create vite@latest` 这一步, 那么还需要 
+
+```bash
+npm install vite --save-dev
+```
+
+然后, 在`src`下新建几个文件夹
+
+- `models` 用于存放模型的 **类型**, 如user, article, comment
+- `pages` 用于存放所有的 **页面**
+- `stores` 用于前端 **持久化** 
+- `utils` 用于放置一些 **工具**, 你可以把一些需要重复利用的函数放在这里.
+- `layouts` 用于 **布局** 
+- `components` 存放一些可复用的 **组件**
+- `router` 存放路由配置
+
+**设置代理**: 从[这里](./web/vite.config.ts)复制代理配置. 这一步很重要, 也很容易忽略!
+
 ![Frontend Created](./assets/frontend-created.png)
 
 打开 `package.json` 其中 scripts 下的 dev 左侧也有一个启动按钮，点击启动
@@ -250,21 +274,7 @@ npm install
 
 ![Frontend First Run](./assets/frontend-first-run.png)
 
-接下来, 添加依赖
 
-```shell
-npm install @mui/material @emotion/react @emotion/styled @fontsource/roboto @mui/icons-material react-router-dom zustand axios
-```
-
-然后, 在`src`下新建几个文件夹
-
-- `models` 用于存放模型的 **类型**, 如user, article, comment
-- `pages` 用于存放变换的 **页面**
-- `stores` 用于前端 **持久化**
-- `utils` 用于放置一些 **工具**, 例如 axios
-- `layouts` 用于 **布局**
-- `components` 存放一些可复用的 **组件**
-- `router` 存放路由配置
 
 ## 开发（后端）
 
@@ -483,20 +493,42 @@ REST 的设计理念，它到底应该被归为文章，还是应该被归为评
 
 但你也看见了，在这里，我愿意将这个方法归属于文章资源。
 
-## API 测试
+### API 测试
 
-本教程要求后端实现以下接口.
-你可以使用[apifox](https://apifox.com/)测试接口
+####  本教程要求后端实现以下接口.
 
-### 用户
+- **GET**
 
-点击[后端](src/main/java/dev/e23/dashstar/handler/UserHandler.java)查看具体实现
+	1. 获取所有文章 => `http://localhost:8080/api/articles`
+	2. 获取所有用户 => `http://localhost:8080/api/articles`
+	3. 根据用户 id 获取用户信息 => `http://localhost:8080/api/users/ {id}`
+	4. 根据文章 id 获取所有评论 => `http://localhost:8080/api/articles/ {id} /comments`
+	5. 根据文章 id 获取对应的文章 => `http://localhost:8080/api/articles/ {id}`
 
-#### 1.注册:  http://localhost:8080/api/users/register
+- **POST**
 
-- 使用 **POST** 方式传参.
-- 请求体是 **JSON** 格式的 (_点击[这里](https://www.oracle.com/cn/database/what-is-json/)了解 JSON_).
-  例如用于注册一个用户名是 `admin`, 密码是 `123456` 的用户, 它的请求体需要是这样的:
+	5. 注册 => `http://localhost:8080/api/users/register`
+	6. 登录 => `http://localhost:8080/api/users/login`
+	7. 发送评论 => `http://localhost:8080/api/comments`
+	8. 发表文章 => `http://localhost:8080/api/articles`
+
+- **PUT**
+
+	9. 更新文章 => `http://localhost:8080/api/articles`
+		
+
+_注意: 访问 7, 9 需要携带对应的文章的 ID_ 
+
+点击 **[后端](src/main/java/dev/e23/dashstar/handler)** 查看具体实现
+
+#### TIP
+你可以使用 [ApiFox](https://apifox.com/) 或者[PostMan](https://www.postman.com/)测试接口
+
+#### 网络请求
+##### JSON 
+大部分网站接受和处理请求都使用 JSON 格式的数据, 本教程也不例外. [ JSON ](https://www.oracle.com/tw/database/what-is-json/) 格式是什么? 
+所以为了能正常接收数据, 我们需要为每次请求的 **请求头** 添加两个参数, `Accept` 和 `Content-Type` 它们的值都是 `application/json` . 
+并且传入的数据的 **请求体** 也要是 JSON 格式的数据. 例如用于注册一个用户名是 `admin`, 密码是 `123456` 的用户, 它的请求体的格式要是这样的:
 
 ```json
 {
@@ -505,29 +537,64 @@ REST 的设计理念，它到底应该被归为文章，还是应该被归为评
 }
 ```
 
-- 请求头有两个参数, `Accept` 和 `Content-Type` 它们的值都是 `application/json`
-- 如果注册成功则返回一个 JSON 对象 `{"code":"CREATED"}`
+![APIfox截图](assets/apifox.png)
 
-#### 2.登录: http://localhost:8080/api/users/login
-
-- 使用 **POST** 方法传参.
-- 请求体同样是账号 `username` 密码 `password`.
-- 登陆成功要返回用户的所有信息, 昵称 `nickname`, 用户名 `username`, 权限 `role`, 用户的索引 `id`,
-  加密完成的密码 `passward`
-  ,验证登录成功的 `code`, 还有最重要的 `token` 用于鉴权.
-
-#### 3. 获取所有用户: http://localhost:8080/api/users
-
-- 使用 **GET** 方法传参
-- 请求头需要额外携带 `Authorization` 头, 内容是登录获得的 `token`. 也就是说想要使用这个 `API`
-  需要携带三个请求头: `Authorization, Accept, Content-Type` 其中 `Accept` 和 `Content-Type` 的内容同注册接口一样 .
-- 请求成功后后端返回一个 **JSON** 格式的数据, 它的 `data` 属性包含了所有用户的详细信息.
-
-如果后端实现了这些接口, 那么前端就可以实现注册, 登录, 获取所有用户
+如果你使用 `APIfox` 发送后得到的数据像这样, 证明你的接口没有问题, 可以与前端对接了.
 
 ## 开发（前端）
 
-设置代理[](./web/vite.config.ts)
+本教程重点在于后端开发, 所以接下来我将会讲解后端程序员也要了解的前端概念. 为了方便起见, 前端项目使用 [React](https://zh-hans.react.dev/learn) 作为前端框架, 使用 [MUI](https://mui.com/material-ui/getting-started/) 完成界面样式的设计. 下面的内容不会涉及任何有关样式设计的内容.
+
+### 路由 与 页面跳转
+
+> 路由是什么?
+>
+> 此路由非彼路由, 它与路由器无关. 如果单从字面上看, 你或许可以猜到它与路径有关. 的确如此, 不过这个路径是 pages 目录下的, 对应的页面组件的路径. 我可以这样设定,  当路由为 /abc 的时候, 跳转到 abc.tsx 组件并显示它的内容
+
+![recording](assets/recording.gif)
+
+仔细看我使用红框框选的地址, 在每次页面跳转的时候都发生了改变. 当我点击其中一篇文章, 他就会跳转到 `/articles/ {id}` 然后在这个界面调用对应的接口, 拿到对应的文章并显示出来. 当然, 如果你愿意的话, 设计成 `/abc/ {id}` 也可以.`(虽然我们通常不会这么做)` 我想说的是, 后端接口与路由无关, 事实上它们是分离的. 路由用于跳转到指定的, 我们写好的页面. 而调用 api 获取所有文章是这个界面组件需要做的事, 如果跳转的界面是空的, 那么它不会做任何事. 
+
+**点击 [页面](./web/src/pages) 查看具体实现, 点击 [路由配置](./web/src/router/index.tsx) 查看路由配置**
+
+### 网络请求 与 鉴权 
+
+一般而言一个网络请求分为 请求头和请求体. 
+
+![请求头](assets/请求头.png)
+
+例如, 这是一个登录的请求, 可以看到标红的是我们指定的请求头. 而请求体在负载中
+
+![payload](assets/payload.png)
+
+点击 [源码](./web/src/utils/axios.ts) 查看我是如何配置网络请求的请求头的. 
+
+登录之后可以获得一个 token 用于后续的鉴权. 
+
+![response](assets/response.png)
+
+为了区分不同的用户的权限, 我在 [源码](./web/src/stores/auth.ts) 存储了登录获得的 token .
+
+- 当用户没有登录的时候, 那么他就没有 token, 因此他无法创建文章, 修改文章.  
+- 并且如果文章不是自己创建的, 他无法修改它. 
+- 并且即使登陆了, 如果你不是管理员, 你也无法创建文章.
+
+![前端权限](assets/前端权限.png)
+
+可以看到普通用户没有修改和创建文章的权力. 
+
+### 前端持久化
+
+> 什么是持久化? 
+>
+> 例如. 当你登录之后, 后端会返回一个 token . 我们需要存储这个 token 以保证登陆期间始终可以拿到 这个token. 
+> 或者, 如果你想切换网页的明暗色主题, 那么就需要在 **全局** 记录当前是明亮色主题还是暗色主题. 这就是持久化. 简单来说, 就是弄了一个全局变量.  
+
+使用浏览器的调试工具可以看到登陆后存储在本地的内容. 
+
+![浏览器调试](assets/浏览器调试.png)
+
+点击 [源码](./web/src/stores) 查看我持久化存储了那些内容, 以及如何持久化存储的. 
 
 ## 附录
 

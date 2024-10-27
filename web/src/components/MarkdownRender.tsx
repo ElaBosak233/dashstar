@@ -1,3 +1,5 @@
+// markdown渲染器组件
+
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Typography, Link, Box, Paper } from '@mui/material';

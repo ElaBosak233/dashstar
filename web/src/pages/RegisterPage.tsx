@@ -1,3 +1,5 @@
+// 注册界面. 如果用户名已存在就报错, 注册成功就跳转到主页.
+
 import React, { useState } from "react";
 import { api } from "@/utils/axios.ts";
 import {

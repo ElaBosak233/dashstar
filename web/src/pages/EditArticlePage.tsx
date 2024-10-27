@@ -1,3 +1,5 @@
+// 文章的编辑界面. 如果不是作者本人, 无法编辑.
+
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button, Stack, TextField, Typography, Container, Paper } from "@mui/material";

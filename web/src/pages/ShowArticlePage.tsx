@@ -1,3 +1,5 @@
+// 显示文章的界面. 包含文章的显示区, 和评论区.
+
 import { useParams } from "react-router-dom";
 import { Suspense, useEffect, useState } from "react";
 import { Grid, Typography, Box, Paper, Container, Skeleton } from "@mui/material";

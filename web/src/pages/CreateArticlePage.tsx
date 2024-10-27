@@ -1,3 +1,5 @@
+// 用于新建一个文章.
+
 import { Button, TextField, Typography, Paper, Box, styled } from "@mui/material";
 import { api } from "@/utils/axios.ts";
 import { useState } from "react";
@@ -82,7 +84,7 @@ export default function CreateArticlePage() {
                 <StyledTextField
                     fullWidth
                     label="文章内容"
-                    placeholder="请输入文章内容..."
+                    placeholder="请输入文章内容,可以使用markdown格式输入..."
                     multiline
                     rows={12}
                     variant="outlined"

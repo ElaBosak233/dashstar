@@ -1,3 +1,5 @@
+// 当访问了不存在的路由, 就跳转到这个界面.
+
 import { Typography, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 

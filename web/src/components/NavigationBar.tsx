@@ -1,3 +1,5 @@
+// 导航条组件
+
 import {
     AppBar, Avatar, Box,
     Button, Card, Dialog, Divider,
@@ -145,15 +147,22 @@ export default function NavigationBar() {
             <Dialog open={showDialog} onClose={() => setShowDialog(false)}>
                 <Card sx={{ padding: 2, minWidth: 300 }}>
                     <Stack alignItems="center" spacing={2}>
-                        <Avatar sx={{ width: 56, height: 56 ,bgcolor:"primary.main"}}> {authStore.user?.username?.slice(0,4)} </Avatar>
+                        <Avatar sx={{
+                            width: 56,
+                            height: 56,
+                            bgcolor: "primary.main",
+                        }}> {authStore.user?.username?.slice(0, 4)} </Avatar>
                         <Typography variant="h6">用户名: {authStore.user?.username}</Typography>
                         <Typography variant="body2" color="text.secondary">
                             昵称: {authStore.user?.nickname ? authStore.user?.nickname : "无"}
                         </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            密码: {authStore.user?.password}
+                        </Typography>
                         <Divider sx={{ width: "100%" }} />
 
                         <Typography variant="body2" color="text.secondary"
-                                    sx={{ whiteSpace: "normal", wordBreak: "break-word" }}>
+                                    sx={{ whiteSpace: "normal", wordBreak: "break-word", textAlign: "center" }}>
                             TOKEN: {authStore.token}
                         </Typography>
                         <Button
