@@ -1,5 +1,6 @@
 package dev.e23.dashstar.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,9 @@ public class User implements Serializable {
     @Column(name = "nickname")  // 表示这个字段对应的数据库表中的列名是 nickname
     private String nickname;
 
+    // 附加题：取消密码显示
+    // 发送的时候忽略 password
+    @JsonIgnore
     @Column(name = "password")  // 表示这个字段对应的数据库表中的列名是 password
     private String password;
 

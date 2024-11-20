@@ -4,13 +4,17 @@
 // created_at => 创建时间
 // title => 文章标题
 
+// 附加题：文章分类
+// 添加一个标签属性用于文章分类
+
 import { User } from "@/models/user.ts";
 
 export interface Article {
-    id?: number
+    id?: number;
     author_id?: number;
     content?: string;
     created_at?: number;
     title?: string;
-    author?:User
+    author?: User;
+    label?: string;
 }

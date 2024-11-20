@@ -33,4 +33,6 @@ public class Article implements Serializable {
     @JsonProperty("created_at")  // 表示这个字段在 JSON 序列化时，字段名是 created_at（不然就会是 createdAt）
     private Long createdAt;
 
+    @Column(name = "label")
+    private String label;
 }

@@ -43,4 +43,20 @@ public class CommentRepository {
             em.close();  // 关闭 EntityManager
         }
     }
+
+    // 附加题：删除评论
+    // 先通过id查找对应的实体，然后直接删除
+    public void delete(Integer id) {
+        EntityManager em = HibernateUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Comment comment = em.find(Comment.class, id);
+            em.remove(comment);
+            em.getTransaction().commit();
+        } catch (PersistenceException e) {
+            em.getTransaction().rollback();
+        } finally {
+            em.close();
+        }
+    }
 }

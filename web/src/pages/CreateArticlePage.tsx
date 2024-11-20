@@ -1,6 +1,13 @@
 // 用于新建一个文章.
 
-import { Button, TextField, Typography, Paper, Box, styled } from "@mui/material";
+import {
+    Box,
+    Button,
+    Paper,
+    styled,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { api } from "@/utils/axios.ts";
 import { useState } from "react";
 import useAuthStore from "@/stores/auth.ts";
@@ -41,17 +48,19 @@ export default function CreateArticlePage() {
     const [content, setContent] = useState("");
     const user = useAuthStore();
     const navigation = useNavigate();
+    const [label, setLabel] = useState("");
 
     function handleClick() {
-        api().post("articles/", {
-            title: title,
-            content: content,
-            author_id: user.user?.id,
-        }).then(
-            () => {
+        api()
+            .post("articles/", {
+                title: title,
+                content: content,
+                author_id: user.user?.id,
+                label: label,
+            })
+            .then(() => {
                 navigation("/");
-            },
-        );
+            });
     }
 
     return (
@@ -79,8 +88,17 @@ export default function CreateArticlePage() {
                     InputLabelProps={{
                         sx: { fontSize: "1rem" },
                     }}
+                />{" "}
+                <StyledTextField
+                    fullWidth
+                    label="文章标签"
+                    placeholder="用于文章分类"
+                    variant="outlined"
+                    onChange={(e) => setLabel(e.target.value)}
+                    InputLabelProps={{
+                        sx: { fontSize: "1rem" },
+                    }}
                 />
-
                 <StyledTextField
                     fullWidth
                     label="文章内容"
@@ -93,13 +111,13 @@ export default function CreateArticlePage() {
                         sx: { fontSize: "1rem" },
                     }}
                 />
-
                 <SubmitButton
                     variant="contained"
                     onClick={handleClick}
                     sx={{
                         mt: 2,
-                        background: (theme) => `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.light} 90%)`,
+                        background: (theme) =>
+                            `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.primary.light} 90%)`,
                     }}
                 >
                     发布文章

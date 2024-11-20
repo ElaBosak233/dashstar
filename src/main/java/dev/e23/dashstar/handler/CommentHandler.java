@@ -46,4 +46,16 @@ public class CommentHandler {
         return Response.status(Response.Status.OK).entity(res).build();
     }
 
+    // 附加题：删除评论
+    // 调用 DAO 层的方法即可
+    @DELETE
+    @Path("/{id}") // /api/comments/{id}
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteComment(@PathParam("id") Integer id) {
+        commentRepository.delete(id);
+        Map<String, Object> res = new HashMap<>();
+        res.put("code", Response.Status.OK);
+        return Response.status(Response.Status.OK).entity(res).build();
+    }
 }

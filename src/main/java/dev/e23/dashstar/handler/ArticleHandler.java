@@ -31,13 +31,16 @@ public class ArticleHandler {
     private UserRepository userRepository;
 
     @GET  // 指定 HTTP GET 请求
-    @Path("/")  // /api/articles
+    @Path("/page/{page}")  // /api/articles/page
     @Produces(MediaType.APPLICATION_JSON)  // 指定返回的数据类型是 JSON
-    public Response getAllArticles() {
+    public Response getAllArticles(@PathParam("page") Integer page) {
         List<Article> articles = articleRepository.findAll();
-        Map<String, Object> res= new HashMap<>();
+        int begin = (page - 1) * 5;
+        int end = Math.min(begin + 5, articles.size());
+        Map<String, Object> res = new HashMap<>();
         res.put("code", Response.Status.OK);
-        res.put("data", articles);
+        res.put("data", articles.subList(begin, end));
+        res.put("totalPage", articles.size() / 5 + 1);
         return Response.status(Response.Status.OK).entity(res).build();
     }
 
